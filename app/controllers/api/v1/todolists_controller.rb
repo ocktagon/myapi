@@ -1,46 +1,56 @@
 class Api::V1::TodolistsController < ApplicationController
-  before_action :set_api_v1_todolist, only: [:show, :update, :destroy]
 
   # GET /api/v1/todolists
   def index
-    @api_v1_todolists = Api::V1::Todolist.all
-
-    render json: @api_v1_todolists
+    render json: Api::V1::Todolist.all
   end
 
   # GET /api/v1/todolists/1
   def show
     list = Api::V1::Todolist.find(params[:id])
     render json: list
-
   end
 
   # POST /api/v1/todolists
   def create
-    newitem = Api::V1::Todolist.new(list_params)
+    list = Api::V1::Todolist.new({title: params[:title]})
 
-    if newitem.save
+    if list.save
       render json: {
         status: 200,
         message: "Successfully created todolist",
-        todolist: newitem
+        todolist: list
       }.to_json
-      # render json: @api_v1_todolist, status: :created, location: @api_v1_todolist
     else
-      head 500
-      # render json: @api_v1_todolist.errors, status: :unprocessable_entity
+      render json: {
+        status: 500,
+        errors: list.errors
+      }.to_json
+
     end
   end
 
-
-
   # PATCH/PUT /api/v1/todolists/1
   def update
-    if @api_v1_todolist.update(api_v1_todolist_params)
-      render json: @api_v1_todolist
+    list = Api::V1::Todolist.find(params[:id])
+    if list.update(list_params)
+      render json: {
+        status: 200,
+        message: "Successfully updated",
+        todolist: list
+      }.to_json
     else
-      render json: @api_v1_todolist.errors, status: :unprocessable_entity
+      render json: {
+        status: 500,
+        message: "Could not be updated",
+        todolist: list
+      }.to_json
     end
+    # if @api_v1_todolist.update(api_v1_todolist_params)
+    #   render json: @api_v1_todolist
+    # else
+    #   render json: @api_v1_todolist.errors, status: :unprocessable_entity
+    # end
   end
 
   # DELETE /api/v1/todolists/1
@@ -55,17 +65,18 @@ class Api::V1::TodolistsController < ApplicationController
   private
 
   def list_params
-    params.require("todolist").permit("title")
+      params.require(:api_v1_todolist).permit(:title)
+      # params.fetch(:api_v1_todolist, {params[:title]})
   end
 
 
     # Use callbacks to share common setup or constraints between actions.
-    def set_api_v1_todolist
-      @api_v1_todolist = Api::V1::Todolist.find(params[:id])
-    end
+    # def set_api_v1_todolist
+    #   @api_v1_todolist = Api::V1::Todolist.find(params[:id])
+    # end
 
-    # Only allow a trusted parameter "white list" through.
-    def api_v1_todolist_params
-      params.fetch(:api_v1_todolist, {})
-    end
+    # # Only allow a trusted parameter "white list" through.
+    # def api_v1_todolist_params
+    #   params.fetch(:api_v1_todolist, {})
+    # end
 end
