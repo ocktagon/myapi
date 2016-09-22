@@ -33,7 +33,7 @@ class Api::V1::TodolistsController < ApplicationController
   # PATCH/PUT /api/v1/todolists/1
   def update
     list = Api::V1::Todolist.find(params[:id])
-    if list.update(list_params)
+    if list.update({title: params[:title]})
       render json: {
         status: 200,
         message: "Successfully updated",
