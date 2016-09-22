@@ -16,10 +16,10 @@ class Api::V1::TodolistsController < ApplicationController
     list = Api::V1::Todolist.new({title: params[:title]})
 
     if list.save
-      render json: {
-        status: 200,
-        message: "Successfully created todolist",
-        todolist: list
+      render status: 200,
+      json: {
+          message: "Successfully created todolist",
+          todolist: list
       }.to_json
     else
       render status: 422,
@@ -31,14 +31,14 @@ class Api::V1::TodolistsController < ApplicationController
   def update
     list = Api::V1::Todolist.find(params[:id])
     if list.update({title: params[:title]})
-      render json: {
-        status: 200,
+      render status: 200,
+      json: {
         message: "Successfully updated",
         todolist: list
       }.to_json
     else
-      render json: {
-        status: 500,
+      render status: 422,
+      json: {
         message: "Could not be updated",
         todolist: list
       }.to_json
@@ -51,8 +51,8 @@ class Api::V1::TodolistsController < ApplicationController
     list = Api::V1::Todolist.find(params[:id])
     list.destroy
 
-    render json: {
-      status: 200,
+    render status: 200,
+    json: {
       message: "Successfully deleted To-do List."
     }.to_json
   end
@@ -61,17 +61,5 @@ class Api::V1::TodolistsController < ApplicationController
 
   def list_params
       params.require(:api_v1_todolist).permit(:title)
-      # params.fetch(:api_v1_todolist, {params[:title]})
   end
-
-
-    # Use callbacks to share common setup or constraints between actions.
-    # def set_api_v1_todolist
-    #   @api_v1_todolist = Api::V1::Todolist.find(params[:id])
-    # end
-
-    # # Only allow a trusted parameter "white list" through.
-    # def api_v1_todolist_params
-    #   params.fetch(:api_v1_todolist, {})
-    # end
 end
