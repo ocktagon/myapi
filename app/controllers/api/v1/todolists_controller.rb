@@ -46,20 +46,18 @@ class Api::V1::TodolistsController < ApplicationController
         todolist: list
       }.to_json
     end
-    # if @api_v1_todolist.update(api_v1_todolist_params)
-    #   render json: @api_v1_todolist
-    # else
-    #   render json: @api_v1_todolist.errors, status: :unprocessable_entity
-    # end
+
   end
 
   # DELETE /api/v1/todolists/1
   def destroy
-    @api_v1_todolist.destroy
+    list = Api::V1::Todolist.find(params[:id])
+    list.destroy
+
     render json: {
       status: 200,
       message: "Successfully deleted To-do List."
-    }
+    }.to_json
   end
 
   private
