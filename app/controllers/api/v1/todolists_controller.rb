@@ -22,11 +22,8 @@ class Api::V1::TodolistsController < ApplicationController
         todolist: list
       }.to_json
     else
-      render json: {
-        status: 500,
-        errors: list.errors
-      }.to_json
-
+      render status: 422,
+      json: {errors: list.errors}.to_json
     end
   end
 
